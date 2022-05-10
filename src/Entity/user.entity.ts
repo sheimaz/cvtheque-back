@@ -11,10 +11,14 @@ export class UserEntity {
 
   @Column()
   password: string;
+  
+  @Column()
+  job: string;
 
   @Column()
   salt: string;
 
   @OneToMany(() => CvEntity, (cv) => cv.user )
   cvs: CvEntity[]
+  
 }

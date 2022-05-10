@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CvEntity, CvStatus } from "../Entity/cv.entity";
+import { CvEntity } from "../Entity/cv.entity";
 import { Repository } from "typeorm";
 import { CreateCvDto } from "../DTO/create-cv.dto";
 import { UserEntity } from "../Entity/user.entity";
@@ -32,7 +32,6 @@ export class CvService {
     const {title, description} = createCvDTO;
     cv.title = title;
     cv.description = description;
-    cv.status = CvStatus.OPEN;
     cv.userId = user.id;
 
 
@@ -44,9 +43,9 @@ export class CvService {
           throw new InternalServerErrorException('Something went wrong, cv not created');
         }
   }
-   async update(id: number, status: CvStatus, user: UserEntity) {
+   async update(id: number, user: UserEntity) {
       try {
-        await this.repo.update({id, userId: user.id}, {status});
+        await this.repo.update({id}, {userId: user.id});
         return this.repo.findOne({id});
       } catch (err) {
         throw new InternalServerErrorException('Something went wrong');

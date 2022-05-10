@@ -7,14 +7,11 @@ import {
   Patch,
   Post,
   UseInterceptors,
-  ValidationPipe,
   UseGuards
 } from "@nestjs/common";
 import { CvService } from "./cv.service";
 import { CreateCvDto } from "../DTO/create-cv.dto";
-import { CvStatus } from "../Entity/cv.entity";
 import { stat } from "fs";
-import { CvStatusValidationPipe } from "../pipes/CvStatusValidation.pipe";
 import { AuthGuard } from "@nestjs/passport";
 import { User } from "../auth/user.decorator";
 import { UserEntity } from "../Entity/user.entity";
@@ -31,9 +28,10 @@ export class CvController {
     //console.log(this.cvService.getAllCvs());
     return this.cvService.getAllCvs(user);
   }
+ 
 
   @Post()
-   createNewCv(@Body(ValidationPipe) data: CreateCvDto,
+   createNewCv(@Body() data: CreateCvDto,
                 @User() user: UserEntity) {
      const {title, description} = data;
 
@@ -42,11 +40,11 @@ export class CvController {
 
     @Patch(':id')
      updateCv(
-       @Body('status', CvStatusValidationPipe) status: CvStatus,
+       //@Body('status', CvStatusValidationPipe) status: CvStatus,
        @Param('id') id: number,
        @User() user: UserEntity
      ) {
-         return this.cvService.update(id, status, user);
+         return this.cvService.update(id, user);
      }
 
     @Delete(":id")
